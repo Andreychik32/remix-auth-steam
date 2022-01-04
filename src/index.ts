@@ -1,35 +1,52 @@
-import { SessionStorage } from "@remix-run/server-runtime";
+import { redirect, SessionStorage } from "@remix-run/server-runtime";
 import {
   AuthenticateOptions,
   Strategy,
   StrategyVerifyCallback,
 } from "remix-auth";
+import { RelyingParty } from "openid";
+import { PromiseAuthenticate, PromiseVerifyAssertion } from "./promises";
+import SteamAPI, { PlayerSummary } from "steamapi";
 
 /**
  * This interface declares what configuration the strategy needs from the
  * developer to correctly work.
  */
-export interface MyStrategyOptions {
-  something: "You may need";
+export interface SteamStrategyOptions {
+  returnURL: string;
+  realm?: string;
+  apiKey: string;
 }
 
 /**
  * This interface declares what the developer will receive from the strategy
  * to verify the user identity in their system.
  */
-export interface MyStrategyVerifyParams {
-  something: "Dev may need";
-}
+export type SteamStrategyVerifyParams = PlayerSummary;
 
-export class MyStrategy<User> extends Strategy<User, MyStrategyVerifyParams> {
-  name = "change-me";
+export class SteamStrategy<User> extends Strategy<
+  User,
+  SteamStrategyVerifyParams
+> {
+  name = "steam";
+  private options: SteamStrategyOptions;
+  private relyingParty: RelyingParty;
+  private steamApi: SteamAPI;
 
   constructor(
-    options: MyStrategyOptions,
-    verify: StrategyVerifyCallback<User, MyStrategyVerifyParams>
+    options: SteamStrategyOptions,
+    verify: StrategyVerifyCallback<User, SteamStrategyVerifyParams>
   ) {
     super(verify);
-    // do something with the options here
+    this.options = options;
+    this.relyingParty = new RelyingParty(
+      this.options.returnURL,
+      null,
+      true,
+      false,
+      []
+    );
+    this.steamApi = new SteamAPI(options.apiKey);
   }
 
   async authenticate(
@@ -37,13 +54,36 @@ export class MyStrategy<User> extends Strategy<User, MyStrategyVerifyParams> {
     sessionStorage: SessionStorage,
     options: AuthenticateOptions
   ): Promise<User> {
-    return await this.failure(
-      "Implement me!",
-      request,
-      sessionStorage,
-      options
-    );
-    // Uncomment me to do a success response
-    // this.success({} as User, request, sessionStorage, options);
+    try {
+      const result = await PromiseVerifyAssertion(this.relyingParty, request);
+
+      if (!result.authenticated || !result.claimedIdentifier)
+        return this.failure(
+          `Not authenticated from result`,
+          request,
+          sessionStorage,
+          options
+        );
+      try {
+        const userSteamID = result.claimedIdentifier
+          .toString()
+          .split("/")
+          .at(-1)!;
+
+        const steamUserSummary = await this.steamApi.getUserSummary(
+          userSteamID
+        );
+
+        const user = await this.verify(steamUserSummary);
+        return this.success(user, request, sessionStorage, options);
+      } catch (error) {
+        let message = (error as Error).message;
+        return this.failure(message, request, sessionStorage, options);
+      }
+    } catch {
+      const result = await PromiseAuthenticate(this.relyingParty);
+      console.log({ result });
+      throw redirect(result);
+    }
   }
 }
