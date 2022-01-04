@@ -1,8 +1,12 @@
 {
-  "name": "remix-auth-strategy-template",
-  "version": "0.0.0",
+  "name": "remix-auth-steam",
+  "version": "1.0.0",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
+  "author": {
+    "name": "Andrii Yaroshenko",
+    "email": "haxellio@pm.me"
+  },
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "typecheck": "tsc --project tsconfig.json --noEmit",
@@ -15,7 +19,9 @@
     "remix-auth",
     "auth",
     "authentication",
-    "strategy"
+    "strategy",
+    "steam",
+    "remix-steam"
   ],
   "license": "MIT",
   "files": [
