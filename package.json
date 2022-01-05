@@ -7,6 +7,10 @@
     "name": "Andrii Yaroshenko",
     "email": "haxellio@pm.me"
   },
+  "repository": {
+    "url": "https://github.com/Andreychik32/remix-auth-steam",
+    "type": "git"
+  },
   "scripts": {
     "build": "tsc --project tsconfig.json",
     "typecheck": "tsc --project tsconfig.json --noEmit",
