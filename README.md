@@ -10,6 +10,18 @@ This is a [Steam](https://steamcommunity.com/) strategy for [remix-auth](https:/
 | Cloudflare | Not tested          |
 
 ## How to use
+### Installation
+
+Please, use
+```bash
+npm i remix-auth-steam
+```
+or
+```bash
+yarn add remix-auth-steam
+```
+
+
 ### File structure
 
 To properly use the library, you need to maintain these additional files in your `app` directory:
