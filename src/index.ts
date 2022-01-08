@@ -82,7 +82,6 @@ export class SteamStrategy<User> extends Strategy<
       }
     } catch {
       const result = await PromiseAuthenticate(this.relyingParty);
-      console.log({ result });
       throw redirect(result);
     }
   }

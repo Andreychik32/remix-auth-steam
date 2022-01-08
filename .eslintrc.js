@@ -14,6 +14,7 @@ module.exports = {
     "@typescript-eslint/no-non-null-assertion": "off",
     "no-unused-vars": "off",
     "no-var": "off",
+    "no-console": "error",
     "unicorn/no-null": "off",
     "unicorn/prefer-node-protocol": "off",
     "unicorn/filename-case": "off",
