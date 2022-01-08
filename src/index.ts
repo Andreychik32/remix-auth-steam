@@ -33,7 +33,7 @@ export class SteamStrategy<User> extends Strategy<
     this.options = options;
     this.relyingParty = new RelyingParty(
       this.options.returnURL,
-      null,
+      this.options.realm ?? null,
       true,
       false,
       []
