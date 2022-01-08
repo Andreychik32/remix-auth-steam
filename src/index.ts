@@ -8,20 +8,12 @@ import { RelyingParty } from "openid";
 import { PromiseAuthenticate, PromiseVerifyAssertion } from "./promises";
 import SteamAPI, { PlayerSummary } from "steamapi";
 
-/**
- * This interface declares what configuration the strategy needs from the
- * developer to correctly work.
- */
 export interface SteamStrategyOptions {
   returnURL: string;
   realm?: string;
   apiKey: string;
 }
 
-/**
- * This interface declares what the developer will receive from the strategy
- * to verify the user identity in their system.
- */
 export type SteamStrategyVerifyParams = PlayerSummary;
 
 export class SteamStrategy<User> extends Strategy<

@@ -2,8 +2,8 @@ import { RelyingParty } from "openid";
 
 export const PromiseAuthenticate = (
   relyingParty: RelyingParty
-): Promise<string> => {
-  return new Promise((resolve, reject) => {
+): Promise<string> =>
+  new Promise((resolve, reject) => {
     relyingParty.authenticate(
       "https://steamcommunity.com/openid",
       false,
@@ -18,7 +18,6 @@ export const PromiseAuthenticate = (
       }
     );
   });
-};
 
 export const PromiseVerifyAssertion = (
   relyingParty: RelyingParty,
@@ -26,8 +25,8 @@ export const PromiseVerifyAssertion = (
 ): Promise<{
   authenticated: boolean;
   claimedIdentifier?: string | undefined;
-}> => {
-  return new Promise((resolve, reject) => {
+}> =>
+  new Promise((resolve, reject) => {
     relyingParty.verifyAssertion(req, (err, result) => {
       if (err) {
         return reject(err);
@@ -38,4 +37,3 @@ export const PromiseVerifyAssertion = (
       return resolve(result);
     });
   });
-};
