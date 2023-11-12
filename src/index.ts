@@ -27,7 +27,7 @@ export class SteamStrategy<User> extends Strategy<
 
   constructor(
     options: SteamStrategyOptions,
-    verify: StrategyVerifyCallback<User, SteamStrategyVerifyParams>
+    verify: StrategyVerifyCallback<User, SteamStrategyVerifyParams>,
   ) {
     super(verify);
     this.options = options;
@@ -36,7 +36,7 @@ export class SteamStrategy<User> extends Strategy<
       this.options.realm ?? null,
       true,
       false,
-      []
+      [],
     );
     this.steamApi = new SteamAPI(options.apiKey);
   }
@@ -44,7 +44,7 @@ export class SteamStrategy<User> extends Strategy<
   async authenticate(
     request: Request,
     sessionStorage: SessionStorage,
-    options: AuthenticateOptions
+    options: AuthenticateOptions,
   ): Promise<User> {
     try {
       const result = await PromiseVerifyAssertion(this.relyingParty, request);
@@ -54,7 +54,7 @@ export class SteamStrategy<User> extends Strategy<
           `Not authenticated from result`,
           request,
           sessionStorage,
-          options
+          options,
         );
       try {
         const userSteamID = result.claimedIdentifier
@@ -62,9 +62,8 @@ export class SteamStrategy<User> extends Strategy<
           .split("/")
           .at(-1)!;
 
-        const steamUserSummary = await this.steamApi.getUserSummary(
-          userSteamID
-        );
+        const steamUserSummary =
+          await this.steamApi.getUserSummary(userSteamID);
 
         const user = await this.verify(steamUserSummary);
         return this.success(user, request, sessionStorage, options);

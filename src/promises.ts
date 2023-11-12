@@ -1,7 +1,7 @@
 import { RelyingParty } from "openid";
 
 export const PromiseAuthenticate = (
-  relyingParty: RelyingParty
+  relyingParty: RelyingParty,
 ): Promise<string> =>
   new Promise((resolve, reject) => {
     relyingParty.authenticate(
@@ -15,13 +15,13 @@ export const PromiseAuthenticate = (
         if (!url) return reject("Got no URL from authenticate method");
 
         return resolve(url);
-      }
+      },
     );
   });
 
 export const PromiseVerifyAssertion = (
   relyingParty: RelyingParty,
-  req: Request
+  req: Request,
 ): Promise<{
   authenticated: boolean;
   claimedIdentifier?: string | undefined;
